@@ -77,3 +77,13 @@ func TestUpdate(t *testing.T) {
 
 	assertDefinition(t, dictionary, word, newDefinition)
 }
+
+func TestDelete(t *testing.T) {
+	word := "test"
+	dictionary := Dictionary{word: "test definition"}
+
+	dictionary.Delete(word)
+
+	_, err := dictionary.Search(word)
+	assertError(t, err, ErrNotFound)
+}
