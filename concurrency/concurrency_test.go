@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func slowStubWebsiteChecker(_string) bool {
+func slowStubWebsiteChecker(_ string) bool {
 	time.Sleep(20 * time.Millisecond)
 	return true
 }
