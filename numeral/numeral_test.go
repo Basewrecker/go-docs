@@ -2,7 +2,9 @@ package numeral
 
 import (
 	"fmt"
+	"log"
 	"testing"
+	"testing/quick"
 )
 
 var cases = []struct {
@@ -55,5 +57,23 @@ func TestConvertingToArabic(t *testing.T) {
 				t.Errorf("got %d, want %d", got, test.Arabic)
 			}
 		})
+	}
+}
+
+func TestPropertiesOfConversion(t *testing.T) {
+	assertion := func(arabic uint16) bool {
+		if arabic > 3999 {
+			log.Println(arabic)
+			return true
+		}
+		roman := ConvertToRoman(int(arabic))
+		fromRoman := ConvertToArabic(roman)
+		return fromRoman == int(arabic)
+	}
+
+	if err := quick.Check(assertion, &quick.Config{
+		MaxCount: 1000,
+	}); err != nil {
+		t.Error("failed checks", err)
 	}
 }
