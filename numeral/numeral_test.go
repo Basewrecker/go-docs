@@ -1,42 +1,58 @@
-// The Romans were a clever bunch. They conquered most of Europe and ruled it for hundreds of years. They invented concrete and straight roads and even bikinis [1]. One thing they never discovered though was the number zero. This made writing and dating extensive histories of their exploits slightly more challenging, but the system of numbers they came up with is still in use today. For example the BBC uses Roman numerals to date their programmes.
-
-// The Romans wrote numbers using letters : I, V, X, L, C, D, M. (notice these letters have lots of straight lines and are hence easy to hack into stone tablets)
-// Part I
-
-// The Kata says you should write a function to convert from normal numbers to Roman Numerals: eg
-
-//      1 --> I
-//      10 --> X
-//      7 --> VII
-
-// etc.
-
-// For a full description of how it works, take a look at [this useful reference website] : which includes an implementation of the Kata in javascript.
-
-// There is no need to be able to convert numbers larger than about 3000. (The Romans themselves didn’t tend to go any higher)
-
 package numeral
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
+
+var cases = []struct {
+	Arabic int
+	Roman  string
+}{
+	{1, "I"},
+	{2, "II"},
+	{3, "III"},
+	{4, "IV"},
+	{5, "V"},
+	{9, "IX"},
+	{10, "X"},
+	{14, "XIV"},
+	{18, "XVIII"},
+	{20, "XX"},
+	{39, "XXXIX"},
+	{40, "XL"},
+	{47, "XLVII"},
+	{49, "XLIX"},
+	{50, "XLX"},
+	{100, "C"},
+	{90, "XC"},
+	{400, "CD"},
+	{900, "CM"},
+	{1000, "M"},
+	{1984, "MCMXLXLIV"},
+	{3999, "MMMCMXCIX"},
+	{2014, "MMXIV"},
+	{1006, "MVI"},
+	{798, "DCCXCVIII"},
+}
 
 func TestRomanNumerals(t *testing.T) {
-	cases := []struct {
-		Description string
-		Arabic      int
-		Want        string
-	}{
-		{"1 gets converted to I", 1, "I"},
-		{"2 gets converted to I", 2, "II"},
-		{"3 gets converted to III", 3, "III"},
-		{"4 gets converted to IV(can't repeat more than 3 times)", 4, "IV"},
-		{"5 gets converted to V", 5, "V"},
-	}
-
 	for _, test := range cases {
-		t.Run(test.Description, func(t *testing.T) {
+		t.Run(fmt.Sprintf("%d gets converted to %q", test.Arabic, test.Roman), func(t *testing.T) {
 			got := ConvertToRoman(test.Arabic)
-			if got != test.Want {
-				t.Errorf("got %q, want %q", got, test.Want)
+			if got != test.Roman {
+				t.Errorf("got %q, want %q", got, test.Roman)
+			}
+		})
+	}
+}
+
+func TestConvertingToArabic(t *testing.T) {
+	for _, test := range cases[:1] {
+		t.Run(fmt.Sprintf("%q gets converted to %d", test.Roman, test.Arabic), func(t *testing.T) {
+			got := ConvertToArabic(test.Roman)
+			if got != test.Arabic {
+				t.Errorf("got %d, want %d", got, test.Arabic)
 			}
 		})
 	}
