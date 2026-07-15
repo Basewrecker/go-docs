@@ -70,6 +70,17 @@ func assertStatus(t testing.TB, got, want int) {
 	}
 }
 
+func AssertPlayerWin(t testing.TB, store, store *StubPlayerStore, winner string) {
+	t.Helper()
+	if len(store.winCalls) != 1 {
+		t.Fatalf("got %d calls to RecordWin want %d", len(store.winCalls), 1)
+	}
+
+	if store.winCalls[0] != winner {
+		t.Errorf("did not store correct win got %q want %q", store.winCalls[0], winner)
+	}
+}
+
 func newGetScoreRequest(name string) *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/players/%s", name), nil)
 	return req
