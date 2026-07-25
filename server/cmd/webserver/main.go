@@ -1,29 +1,23 @@
 package main
 
 import (
-	"fmt"
-	poker "g-test/server"
 	"log"
-	"os"
+	"net/http"
 )
 
 const dbFileName = "game.db.json"
 
 func main() {
-	fmt.Println("lets play")
-	fmt.Println("type the {name} to record the win")
-	db, err := os.OpenFile(dbFileName, os.O_RDWR|os.O_CREATE, 0666)
+	store, close, err := poker.FileSystemPlayerStoreFromFile(dbFileName)
 
 	if err != nil {
-		log.Fatalf("problem opening %s %v", dbFileName, err)
+		log.Fatal(err)
 	}
+	defer close()
 
-	store, err := poker.NewFileSystemPlayerStore(db)
+	server := poker.NewPlayerServer(store)
 
-	if err != nil {
-		log.Fatalf("problem creating file system player store, %v", err)
+	if err := http.ListenAndServe(":5000", server); err != nil {
+		log.Fatalf("could not listen on port 5000 %v", err)
 	}
-
-	game := poker.CLI{store, os.Stdin}
-	game.PlayPoker()
 }
